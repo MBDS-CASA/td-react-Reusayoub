@@ -4,10 +4,14 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 
-function Header(){
+function Header({name}){
   return(
     <header>
-      <h1>Header</h1>
+      <img src="https://emsi.ma/wp-content/uploads/2020/07/logo.png" alt="logo_emsi" style={{ maxWidth: '100%', height: 'auto' }}
+      />
+
+      <h1>Introduction à {name}</h1>
+      <h2>A la découverte des premières notions de React</h2>
     </header>
   )
 }
@@ -19,7 +23,9 @@ function App() {
 
     <>
       <div>
-        <Header/>
+        
+        <Header name='React'/>
+
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>

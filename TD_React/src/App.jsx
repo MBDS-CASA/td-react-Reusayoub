@@ -33,9 +33,10 @@ function MainContent() {
 }
 
 function Footer({ Nom, Prenom }) {
+  const annee = new Date().getFullYear();
   return (
     <footer style={{  bottom: 0, width: '100%', textAlign: 'center' }}>
-      <p>Tous droits réservés - {Nom} {Prenom}</p>
+      <p>© {annee}- {Nom} {Prenom}, Tous droits réservés.</p>
     </footer>
   );
 }

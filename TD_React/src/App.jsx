@@ -21,6 +21,18 @@ function MainContent() {
   );
 }
 
+function Footer({ Nom, Prenom }) {
+  return (
+    <footer style={{  bottom: 0, width: '100%', textAlign: 'center' }}>
+      <p>Tous droits réservés - {Nom} {Prenom}</p>
+    </footer>
+  );
+}
+
+
+
+
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -51,6 +63,8 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <Footer Nom="Benabdoulwahid" Prenom="Ayoub"/>
+
     </>
   )
 }

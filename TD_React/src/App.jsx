@@ -2,7 +2,6 @@ import { useState } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import data from './data.json';
-
 import './App.css';
 
 function Header({ name }) {
@@ -44,37 +43,58 @@ function Footer({ Nom, Prenom }) {
 
 function App() {
   const [count, setCount] = useState(0);
-  const [item, setItem] = useState(null);  // Ajouter un état pour l'élément aléatoire
+  const [item, setItem] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Gérer l'état du menu hamburger
 
-  // Fonction pour tirer un item aléatoirement
   const getRandomItem = () => {
     const randomIndex = Math.floor(Math.random() * data.length);
     return data[randomIndex];
   };
-
-  // Fonction pour afficher un item aléatoire
+  const handleMenuClick = (text) => {
+    alert(`Vous avez cliqué sur : ${text}`);
+  };
+ 
   const handleRandomItem = () => {
     const randomItem = getRandomItem();
-    setItem(randomItem);  // Met à jour l'état avec un élément aléatoire
+    setItem(randomItem);  
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen); // Permet de basculer l'état du menu
   };
 
   return (
     <>
-      <div>
-        <Header name="React" />
-        <MainContent />
+      <Header name="React" />
+      
+      {/* Menu Hamburger */}
+      <div className="hamburger-container">
+        <button className="hamburger" onClick={toggleMenu}>
+          ☰
+        </button>
 
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        {isMenuOpen && (
+          <div className="menu">
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              <li><button onClick={() => handleMenuClick('Notes')}>Notes</button></li>
+              <li><button onClick={() => handleMenuClick('Étudiants')}>Étudiants</button></li>
+              <li><button onClick={() => handleMenuClick('Matières')}>Matières</button></li>
+              <li><button onClick={() => handleMenuClick('A propos')}>A propos</button></li>
+            </ul>
+          </div>
+        )}
       </div>
 
-      <h1>Vite + MBDS + React</h1>
-      
-      {/* Affichage du bouton et de l'élément aléatoire */}
+      {/* Contenu principal */}
+      <MainContent />
+
+      <a href="https://vite.dev" target="_blank">
+        <img src={viteLogo} className="logo" alt="Vite logo" />
+      </a>
+      <a href="https://react.dev" target="_blank">
+        <img src={reactLogo} className="logo react" alt="React logo" />
+      </a>
+
       <div className="container text-center">
         <h1>Afficher les détails d'une note</h1>
         <button className="btn btn-primary my-4" onClick={handleRandomItem}>
@@ -82,7 +102,7 @@ function App() {
         </button>
         {item && (
           <div className="card">
-            <div className="card-body">
+            <div className="card2">
               <h5 className="card-title">{item.course}</h5>
               <p className="card-text">
                 <strong>Étudiant :</strong> {item.student.firstname} {item.student.lastname} <br />

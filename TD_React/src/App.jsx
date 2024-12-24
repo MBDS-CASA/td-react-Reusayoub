@@ -41,33 +41,52 @@ function Footer({ Nom, Prenom }) {
   );
 }
 
+function Notes() {
+  return <div>Contenu du menu : Notes</div>;
+}
+
+function Etudiants() {
+  return <div>Contenu du menu : Étudiants</div>;
+}
+function Matieres() {
+  return <div>Contenu du menu : Matières</div>;
+}
+
+function APropos() {
+  return <div>Contenu du menu : À propos</div>;
+}
+
 function App() {
   const [count, setCount] = useState(0);
   const [item, setItem] = useState(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Gérer l'état du menu hamburger
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState("Notes");
 
   const getRandomItem = () => {
     const randomIndex = Math.floor(Math.random() * data.length);
     return data[randomIndex];
   };
-  const handleMenuClick = (text) => {
-    alert(`Vous avez cliqué sur : ${text}`);
-  };
- 
+
   const handleRandomItem = () => {
     const randomItem = getRandomItem();
-    setItem(randomItem);  
+    setItem(randomItem);
   };
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen); // Permet de basculer l'état du menu
+    setIsMenuOpen(!isMenuOpen);
   };
+
+  const menuItems = [
+    { name: "Notes", component: <Notes /> },
+    { name: "Étudiants", component: <Etudiants /> },
+    { name: "Matières", component: <Matieres /> },
+    { name: "À propos", component: <APropos /> },
+  ];
 
   return (
     <>
       <Header name="React" />
-      
-      {/* Menu Hamburger */}
+
       <div className="hamburger-container">
         <button className="hamburger" onClick={toggleMenu}>
           ☰
@@ -75,17 +94,29 @@ function App() {
 
         {isMenuOpen && (
           <div className="menu">
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-              <li><button onClick={() => handleMenuClick('Notes')}>Notes</button></li>
-              <li><button onClick={() => handleMenuClick('Étudiants')}>Étudiants</button></li>
-              <li><button onClick={() => handleMenuClick('Matières')}>Matières</button></li>
-              <li><button onClick={() => handleMenuClick('A propos')}>A propos</button></li>
+            <ul style={{ listStyle: "none", padding: 0 }}>
+              {menuItems.map((item) => (
+                <li
+                  key={item.name}
+                  onClick={() => setSelectedMenu(item.name)} 
+                  style={{
+                    cursor: "pointer",
+                    fontWeight: selectedMenu === item.name ? "bold" : "normal",
+                    color: selectedMenu === item.name ? "#007bff" : "black",
+                  }}
+                >
+                  {item.name}
+                </li>
+              ))}
             </ul>
           </div>
         )}
       </div>
 
-      {/* Contenu principal */}
+      <div className="menu-content">
+        {menuItems.find((item) => item.name === selectedMenu)?.component}
+      </div>
+
       <MainContent />
 
       <a href="https://vite.dev" target="_blank">
@@ -105,7 +136,8 @@ function App() {
             <div className="card2">
               <h5 className="card-title">{item.course}</h5>
               <p className="card-text">
-                <strong>Étudiant :</strong> {item.student.firstname} {item.student.lastname} <br />
+                <strong>Étudiant :</strong> {item.student.firstname}{" "}
+                {item.student.lastname} <br />
                 <strong>ID étudiant :</strong> {item.student.id} <br />
                 <strong>Date :</strong> {item.date} <br />
                 <strong>Note :</strong> {item.grade} <br />

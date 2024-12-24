@@ -123,3 +123,10 @@
   transform: scale(0.98);
   border-radius: 20px;
  }
+
+ .search-bar {
+  margin-bottom: 20px;
+  background-color: #222; /* Fond de la barre de recherche */
+  border-radius: 5px; /* Coins arrondis */
+}
+

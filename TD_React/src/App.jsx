@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import data from './data.json';
 import './App.css';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
 
 function Header({ name }) {
   return (
@@ -16,16 +17,16 @@ function Header({ name }) {
 
 function MainContent() {
   const now = new Date();
-    
+
   const jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
   const mois = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
   const jour = jours[now.getDay()];
   const moisNom = mois[now.getMonth()];
   const annee = now.getFullYear();
-  const heure = String(now.getHours()).padStart(2, '0'); 
-  const minute = String(now.getMinutes()).padStart(2, '0'); 
-  const seconde = String(now.getSeconds()).padStart(2, '0'); 
+  const heure = String(now.getHours()).padStart(2, '0');
+  const minute = String(now.getMinutes()).padStart(2, '0');
+  const seconde = String(now.getSeconds()).padStart(2, '0');
 
   return (
     <p>Bonjour, on est le {jour}, {moisNom}, {annee} et il est {heure}:{minute}:{seconde}</p>
@@ -42,18 +43,192 @@ function Footer({ Nom, Prenom }) {
 }
 
 function Notes() {
-  return <div>Contenu du menu : Notes</div>;
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredNotes = data.filter(note => {
+    const course = note.course?.toLowerCase() || '';
+    const studentFirstName = note.student?.firstname?.toLowerCase() || '';
+    const studentLastName = note.student?.lastname?.toLowerCase() || '';
+    const date = note.date?.toLowerCase() || '';
+    const grade = note.grade?.toString().toLowerCase() || '';
+
+    return (
+      course.includes(searchQuery.toLowerCase()) ||
+      studentFirstName.includes(searchQuery.toLowerCase()) ||
+      studentLastName.includes(searchQuery.toLowerCase()) ||
+      date.includes(searchQuery.toLowerCase()) ||
+      grade.includes(searchQuery.toLowerCase())
+    );
+  });
+
+  return (
+    <div>
+      <h3>Liste des notes des étudiants</h3>
+      <TextField
+  label="Rechercher"
+  variant="outlined"
+  fullWidth
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  style={{
+    marginBottom: '20px',
+  }}
+  InputProps={{
+    style: {
+      color: '#FFFFFF', 
+    },
+  }}
+  InputLabelProps={{
+    style: {
+      color: '#FFFFFF', 
+    },
+  }}
+/>
+
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Course</TableCell>
+              <TableCell>Student</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Grade</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredNotes.map((note) => (
+              <TableRow key={note.unique_id}>
+                <TableCell>{note.course || 'N/A'}</TableCell>
+                <TableCell>
+                  {note.student?.firstname || 'N/A'} {note.student?.lastname || 'N/A'}
+                </TableCell>
+                <TableCell>{note.date || 'N/A'}</TableCell>
+                <TableCell>{note.grade || 'N/A'}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+  );
 }
 
+
 function Etudiants() {
-  return <div>Contenu du menu : Étudiants</div>;
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const students = [...new Set(data.map((note) => note.student))]; 
+  const filteredStudents = students.filter(student =>
+    student.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    student.lastname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    student.id.toString().includes(searchQuery)
+  );
+
+  return (
+    <div>
+      <h3>Liste des étudiants</h3>
+      <TextField
+  label="Rechercher"
+  variant="outlined"
+  fullWidth
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  style={{
+    marginBottom: '20px',
+  }}
+  InputProps={{
+    style: {
+      color: '#FFFFFF', 
+    },
+  }}
+  InputLabelProps={{
+    style: {
+      color: '#FFFFFF',
+    },
+  }}
+/>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>First Name</TableCell>
+              <TableCell>Last Name</TableCell>
+              <TableCell>ID</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredStudents.map((student, index) => (
+              <TableRow key={index}>
+                <TableCell>{student.firstname}</TableCell>
+                <TableCell>{student.lastname}</TableCell>
+                <TableCell>{student.id}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+  );
 }
+
 function Matieres() {
-  return <div>Contenu du menu : Matières</div>;
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const courses = [...new Set(data.map((note) => note.course))]; 
+  const filteredCourses = courses.filter(course =>
+    course.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div>
+      <h3>Liste des matières</h3>
+      <TextField
+  label="Rechercher"
+  variant="outlined"
+  fullWidth
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  style={{
+    marginBottom: '20px',
+  }}
+  InputProps={{
+    style: {
+      color: '#FFFFFF', 
+    },
+  }}
+  InputLabelProps={{
+    style: {
+      color: '#FFFFFF', 
+    },
+  }}
+/>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Matière</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredCourses.map((course, index) => (
+              <TableRow key={index}>
+                <TableCell>{course}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+  );
 }
 
 function APropos() {
-  return <div>Contenu du menu : À propos</div>;
+  return (
+    <div>
+      <h3>À propos</h3>
+      <p>Ce projet est une application React permettant de gérer les notes, étudiants, matières.</p>
+    </div>
+  );
 }
 
 function App() {
